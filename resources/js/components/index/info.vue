@@ -55,6 +55,7 @@ export default {
             news: [],
             actualNew: [],
             openNew: false,
+            newsUrl: 'https://www.lanacion.com.ar'
         }
     },
     methods: {
@@ -65,7 +66,7 @@ export default {
         },
         updateNews() {
             // Call to api and get news html
-            axios.post('/api/noticias/buscar', {url:'https://www.lanacion.com.ar/'}).then((response) => {
+            axios.post('/api/noticias/buscar', {url:this.newsUrl}).then((response) => {
                 // || Transform to html object
                 let html = document.createElement('html');
                 html.innerHTML = response.data;
@@ -81,31 +82,44 @@ export default {
                 processedArticles.push(this.processArticle(articles[0]));
 
                 // || The rest of them
-                for(let i = 1; i<articles.length; i++) {
-                    let processedArticle = this.processArticle(articles[i]);
-                    if(processedArticle === undefined) {
-                        // Nothing
-                    }
-                    else {
-                       processedArticles.push(processedArticle); 
-                    }
+                axios.post('/api/noticias/limpiar', {new: art});
+
+                for(let i = articles.length-4; i<articles.length; i++) {
+                    this.processArticle(articles[i]);
                 }
 
                 // || Send processed to database
-                axios.post('/api/noticias/guardar', {news: processedArticles});
             });
         },
         processArticle(article) {
-            try {
-                let art = {
-                    title: article.getElementsByClassName('com-title')[0].getElementsByTagName('a')[0].innerHTML,
-                    image: article.getElementsByTagName('img')[0].src,                  
-                };
-                console.log(article.getElementsByTagName('a')[0].href);
-                /*axios.post('/api/html/obtener', {url:article.getElementsByTagName('a')[0].href}).then((response) => {
-                    console.log(response);
-                });*/
-                return art; 
+            try {    
+                let href = article.getElementsByTagName('a')[0].href;
+                let finalurl = this.newsUrl;
+                for(let i = 21; i<href.length; i++) {
+                    finalurl+=href[i];
+                }
+
+
+                axios.post('/api/noticias/buscar', {url:finalurl}).then((response) => {
+                    try {
+                        // Search the image
+                        let respHtml = document.createElement('html');
+                        respHtml.innerHTML = response.data;
+                        
+                        let tempI = respHtml.getElementsByClassName('placeholder ')[0].getElementsByTagName('img')[0].src;
+                        let finalI = '';
+                        for(let i = 112; i<tempI.length; i++) {
+                            finalI+= tempI[i];
+                        }
+                        let art = {
+                            title: article.getElementsByClassName('com-title')[0].getElementsByTagName('a')[0].innerHTML,
+                            image: finalI,
+                            link: finalurl,
+                        };
+                        axios.post('/api/noticias/guardar', {new: art});
+                        
+                    } catch (errorII) {}
+                });
 
             } 
             catch (error) {}

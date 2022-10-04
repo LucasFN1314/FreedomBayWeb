@@ -24,40 +24,25 @@ class NewsController extends Controller
 
         curl_close($c);
     } 
-    public function getHtml(Request $req) {
-        $c = curl_init($req->url);
-        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-        if (curl_error($c))
-            die(curl_error($c));
-
-        $html = curl_exec($c);
-
-        // Get the status code
-        $status = curl_getinfo($c, CURLINFO_HTTP_CODE);
-
-        if($status == 200) {
-            return $html;
-        }
-
-        curl_close($c);
-    } 
+    
 
     public function search(Request $req) {
         // || Devolver html
         return $this->get($req->url);
     }
     
-    public function save(Request $req) {
-        // Limpieza
+    public function limpiar() {
         noticia::truncate();
+    }
+
+    public function save(Request $req) {
+        
 
         // || Guardar noticias
-        for($i = 0; $i<count($req->news); $i++) {
             $noticia = new noticia();
-            $noticia->title = $req->news[$i]['title'];
-            $noticia->image = $req->news[$i]['image'];
+            $noticia->title = $req->new['title'];
+            $noticia->image = $req->new['image'];
             $noticia->save();
-        }
     }
 
     public function obtener() {
