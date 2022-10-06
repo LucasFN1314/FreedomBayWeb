@@ -5638,6 +5638,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
@@ -5647,11 +5657,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      data: [],
-      keepReading: [],
-      title: "",
-      subtitle: "",
-      image: ""
+      data: 0,
+      keepReading: 0,
+      title: 0,
+      subtitle: 0,
+      image: 0
     };
   },
   beforeDestroy: function beforeDestroy() {
@@ -11197,7 +11207,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100&display=swap);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.infoModal[data-v-97d662fe] {\r\n    height: 600px;\r\n    width: 90%;\r\n\r\n    background: white;\r\n    z-index: 100;\r\n\r\n    position: absolute;\r\n\r\n    top: 50%;\r\n    left: 50%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n\r\n    transform: translate(-50%, -50%);\r\n\r\n    border-radius: 10px;\r\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#modal-container[data-v-97d662fe] {\r\n    overflow-y: scroll;\r\n    height: inherit;\n}\n.closeModal[data-v-97d662fe] {\r\n    position: relative;\n}\n#closeModal[data-v-97d662fe] {\r\n    position: absolute;\r\n    font-size: 30px;\r\n\r\n    right: 0;\r\n    top: 0;\r\n    z-index: 100;\r\n\r\n    margin-right: 1em;\r\n    margin-top: .5em;\r\n\r\n\r\n    color: rgba(0, 0, 0, 0.521);\n}\n#modalTitle[data-v-97d662fe],\r\n#subtitle[data-v-97d662fe] {\r\n    text-align: center;\r\n    margin-top: 3em;\r\n    margin-bottom: 1em;\r\n    margin-right: 2em;\r\n    margin-left: 2em;\n}\n#subtitle[data-v-97d662fe] {\r\n    margin-top: 0;\r\n    margin-left: 8em;\r\n    margin-right: 8em;\r\n\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\n#principalImage[data-v-97d662fe] {\r\n    width: 100%;\r\n    height: 600px;\r\n\r\n    display: flex;\r\n    justify-content: center;\r\n\r\n    margin-bottom: 2em;\n}\n#principalImage>img[data-v-97d662fe] {\r\n    width: 80%;\r\n    height: 100%;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n\r\n    border: 1px solid #ccc;\n}\n#info[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-content: center;\n}\nh1[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\np[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n    font-size: 18px;\r\n\r\n    margin-left: 7em;\r\n    margin-right: 7em;\r\n\r\n    text-align: justify;\n}\n#keepReading[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    margin-left: 9em;\r\n    margin-right: 9em;\r\n    margin-bottom: 2em;\n}\n#keepReading>a[data-v-97d662fe] {\r\n    text-decoration: none;\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n\r\n    font-weight: 600;\r\n    margin-bottom: 0.5em;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.infoModal[data-v-97d662fe] {\r\n    height: 600px;\r\n    width: 90%;\r\n\r\n    background: white;\r\n    z-index: 100;\r\n\r\n    position: absolute;\r\n\r\n    top: 50%;\r\n    left: 50%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n\r\n    transform: translate(-50%, -50%);\r\n\r\n    border-radius: 10px;\r\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#modal-container[data-v-97d662fe] {\r\n    overflow-y: scroll;\r\n    height: inherit;\n}\n.closeModal[data-v-97d662fe] {\r\n    position: relative;\n}\n#closeModal[data-v-97d662fe] {\r\n    position: absolute;\r\n    font-size: 30px;\r\n\r\n    right: 0;\r\n    top: 0;\r\n    z-index: 100;\r\n\r\n    margin-right: 1em;\r\n    margin-top: .5em;\r\n\r\n\r\n    color: rgba(0, 0, 0, 0.521);\n}\n#modalTitle[data-v-97d662fe],\r\n#subtitle[data-v-97d662fe] {\r\n    text-align: center;\r\n    margin-top: 3em;\r\n    margin-bottom: 1em;\r\n    margin-right: 2em;\r\n    margin-left: 2em;\n}\n#subtitle[data-v-97d662fe] {\r\n    margin-top: 0;\r\n    margin-left: 8em;\r\n    margin-right: 8em;\r\n\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\n#principalImage[data-v-97d662fe] {\r\n    width: 100%;\r\n    height: 600px;\r\n\r\n    display: flex;\r\n    justify-content: center;\r\n\r\n    margin-bottom: 2em;\n}\n#principalImage>img[data-v-97d662fe] {\r\n    width: 80%;\r\n    height: 100%;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n\r\n    border: 1px solid #ccc;\n}\n#info[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-content: center;\n}\nh1[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\np[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n    font-size: 18px;\r\n\r\n    margin-left: 7em;\r\n    margin-right: 7em;\r\n\r\n    text-align: justify;\n}\n#keepReading[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    margin-left: 9em;\r\n    margin-right: 9em;\r\n    margin-bottom: 2em;\n}\n#keepReading>a[data-v-97d662fe] {\r\n    text-decoration: none;\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n\r\n    font-weight: 600;\r\n    margin-bottom: 0.5em;\n}\n.loadingScreen[data-v-97d662fe] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n\r\n    width: 100%;\r\n    height: 100%;\r\n\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    align-items: center;\r\n    justify-content: center;\r\n\r\n    color: white;\r\n    background: rgba(0, 0, 0, 0.9);\n}\n.outloadScreen[data-v-97d662fe] {\r\n    animation: outload-data-v-97d662fe 1s;\r\n\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n\r\n    width: 100%;\r\n    height: 100%;\r\n\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    align-items: center;\r\n    justify-content: center;\r\n    pointer-events: none;\n}\n@keyframes outload-data-v-97d662fe {\n0% {\r\n        \r\n        background: rgba(0, 0, 0, 0.9);\n}\n100% {\n}\n}\n@keyframes outloadicon-data-v-97d662fe {\n0% {\r\n        color: white;\n}\n100% {\r\n        color: transparent;\n}\n}\n.loader[data-v-97d662fe] {\r\n    width: 48px;\r\n    height: 48px;\r\n    border: 5px solid #FFF;\r\n    border-bottom-color: transparent;\r\n    border-radius: 50%;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    animation: rotation-data-v-97d662fe 1s linear infinite;\r\n    pointer-events: none;\n}\n.outloader[data-v-97d662fe] {\r\n    width: 48px;\r\n    height: 48px;\r\n    border-bottom-color: transparent;\r\n    border-radius: 50%;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    animation: outloadicon-data-v-97d662fe 1s linear;\r\n    color: transparent;\r\n    pointer-events: none;\n}\n@keyframes rotation-data-v-97d662fe {\n0% {\r\n        transform: rotate(0deg);\n}\n100% {\r\n        transform: rotate(360deg);\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30082,6 +30092,14 @@ var render = function () {
           0
         ),
       ]),
+      _vm._v(" "),
+      this.data == 0 || this.title == 0 || this.subtitle == 0 || this.image == 0
+        ? _c("div", { staticClass: "loadingScreen" }, [
+            _c("span", { staticClass: "loader" }),
+          ])
+        : _c("div", { staticClass: "outloadScreen" }, [
+            _c("span", { staticClass: "outloader" }),
+          ]),
     ]),
   ])
 }

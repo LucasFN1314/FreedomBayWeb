@@ -32,9 +32,19 @@
                     " v-for="(item, index) of keepReading" :key="index">{{ keepReading[index].innerText }}</a>
                 </div>
             </div>
+
+            <div v-if="this.data == 0 || this.title == 0 || this.subtitle == 0 || this.image == 0"
+                class="loadingScreen">
+                <span class="loader"></span>
+            </div>
+
+            <div v-else class="outloadScreen">
+                <span class="outloader"></span>
+            </div>
+
         </div>
 
-        
+
     </div>
 </template>
 
@@ -42,20 +52,20 @@
 import axios from "axios";
 export default {
     mounted() {
-        
-        window.scrollTo(0,0);
+
+        window.scrollTo(0, 0);
 
         this.getInfo();
         this.deactivateScroll();
-        
+
     },
     data() {
         return {
-            data: [],
-            keepReading: [],
-            title: "",
-            subtitle: "",
-            image: "",
+            data: 0,
+            keepReading: 0,
+            title: 0,
+            subtitle: 0,
+            image: 0,
         };
     },
     beforeDestroy() {
@@ -95,7 +105,7 @@ export default {
                     .getElementsByClassName("visual__image")[0]
                     .getElementsByTagName("img")[0].src;
 
-                document.getElementById('start').scrollIntoView({behavior: 'smooth'}, true);
+                document.getElementById('start').scrollIntoView({ behavior: 'smooth' }, true);
             });
         },
         deactivateScroll() {
@@ -231,5 +241,98 @@ p {
 
     font-weight: 600;
     margin-bottom: 0.5em;
+}
+
+.loadingScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    background: rgba(0, 0, 0, 0.9);
+    
+}
+
+.outloadScreen {
+    animation: outload 1s;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+}
+
+
+@keyframes outload {
+    0% {
+        
+        background: rgba(0, 0, 0, 0.9);
+    }
+    100% {
+
+    }
+}
+
+@keyframes outloadicon {
+    0% {
+        color: white;        
+    }
+    100% {
+        color: transparent;
+    }
+}
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    pointer-events: none;
+
+}
+
+.outloader {
+    width: 48px;
+    height: 48px;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: outloadicon 1s linear;
+    color: transparent;
+    pointer-events: none;
+
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
