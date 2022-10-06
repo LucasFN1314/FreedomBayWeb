@@ -5498,9 +5498,9 @@ __webpack_require__.r(__webpack_exports__);
 
       try {
         var href = article.getElementsByTagName('a')[0].href;
-        var finalurl = this.newsUrl; // Change for local to 21, 24 for prod
+        var finalurl = this.newsUrl;
 
-        for (var i = 24; i < href.length; i++) {
+        for (var i = 21; i < href.length; i++) {
           finalurl += href[i];
         }
 
@@ -5520,11 +5520,11 @@ __webpack_require__.r(__webpack_exports__);
               "new": art
             });
           } catch (errorII) {
-            return -1;
+            console.log(errorII);
           }
         });
       } catch (error) {
-        return -1;
+        console.log(error);
       }
     },
     ClearImageLink: function ClearImageLink(link) {
@@ -5641,7 +5641,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
-    window.scrollTo(0, 0);
     this.getInfo();
     this.deactivateScroll();
   },
@@ -11147,7 +11146,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\na[data-v-6cd742d6] {\n    text-decoration: none;\n}\n.notices[data-v-6cd742d6] {\n    display: flex;\n    justify-content: center;\n\n    margin-top: 3em;\n\n    height: 500px;\n    align-items: center;\n}\n.carousel-notices[data-v-6cd742d6] {\n    width: 90%;\n}\n.carousel-inner[data-v-6cd742d6] {\n\n    height: 500px;\n    min-height: 500px;\n    max-height: 500px;\n}\n.carousel-item[data-v-6cd742d6] {\n    height: 400px;\n    min-height: 400px;\n    max-height: 400px;\n}\n.carousel-item>img[data-v-6cd742d6] {\n    height: 100%;\n    -o-object-fit: cover;\n       object-fit: cover;\n}\n.carousel-control-prev[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.3);\n}\n.carousel-control-next[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.3);\n}\n.carousel-control-prev-icon[data-v-6cd742d6] {\n    background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e\");\n}\n.carousel-control-next-icon[data-v-6cd742d6] {\n    background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e\");\n}\n.carousel-caption[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.15);\n    bottom: .01rem;\n}\n#cargandoNoticias[data-v-6cd742d6] {\n    color: gray;\n    animation-duration: 3s;\n    animation-name: loading-data-v-6cd742d6;\n    animation-iteration-count: infinite;\n}\n#cargandoNoticiasCuad[data-v-6cd742d6] {\n    width: 90%;\n    background: rgba(128, 128, 128, 0.466);\n    height: 500px;\n\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n@keyframes loading-data-v-6cd742d6 {\n0% {\n        color: gray;\n}\n30% {\n        color: rgb(128, 128, 128, .5);\n}\n60% {\n        color: gray;\n}\n90% {\n        color: rgb(128, 128, 128, .5);\n}\n100% {\n        color: gray;\n}\n}\n.blackscreen[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.5);\n    width: 100vw;\n    height: 110vh;\n    position: absolute;\n    top: 0;\n    left: 0;\n}\n.panel_objeto[data-v-6cd742d6] {\n    background-color: rgba(255, 255, 255, 0.5);\n    width: 90%;\n\n    margin: auto;\n    padding: .3em;\n}\n.panel_boton[data-v-6cd742d6] {\n    border-right: 1px solid rgba(128, 128, 128, 0.5);\n    padding-right: 1em;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\na[data-v-6cd742d6] {\n    text-decoration: none;\n}\n.notices[data-v-6cd742d6] {\n    display: flex;\n    justify-content: center;\n\n    margin-top: 3em;\n\n    height: 500px;\n    align-items: center;\n}\n.carousel-notices[data-v-6cd742d6] {\n    width: 90%;\n}\n.carousel-inner[data-v-6cd742d6] {\n    background: red;\n\n    height: 500px;\n    min-height: 500px;\n    max-height: 500px;\n}\n.carousel-item[data-v-6cd742d6] {\n    height: 400px;\n    min-height: 400px;\n    max-height: 400px;\n}\n.carousel-item>img[data-v-6cd742d6] {\n    height: 100%;\n    -o-object-fit: cover;\n       object-fit: cover;\n}\n.carousel-control-prev[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.3);\n}\n.carousel-control-next[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.3);\n}\n.carousel-control-prev-icon[data-v-6cd742d6] {\n    background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e\");\n}\n.carousel-control-next-icon[data-v-6cd742d6] {\n    background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e\");\n}\n.carousel-caption[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.15);\n    bottom: .01rem;\n}\n#cargandoNoticias[data-v-6cd742d6] {\n    color: gray;\n    animation-duration: 3s;\n    animation-name: loading-data-v-6cd742d6;\n    animation-iteration-count: infinite;\n}\n#cargandoNoticiasCuad[data-v-6cd742d6] {\n    width: 90%;\n    background: rgba(128, 128, 128, 0.466);\n    height: 500px;\n\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n@keyframes loading-data-v-6cd742d6 {\n0% {\n        color: gray;\n}\n30% {\n        color: rgb(128, 128, 128, .5);\n}\n60% {\n        color: gray;\n}\n90% {\n        color: rgb(128, 128, 128, .5);\n}\n100% {\n        color: gray;\n}\n}\n.blackscreen[data-v-6cd742d6] {\n    background: rgba(0, 0, 0, 0.5);\n    width: 100vw;\n    height: 110vh;\n    position: absolute;\n    top: 0;\n    left: 0;\n}\n.panel_objeto[data-v-6cd742d6] {\n    background-color: rgba(255, 255, 255, 0.5);\n    width: 90%;\n\n    margin: auto;\n    padding: .3em;\n}\n.panel_boton[data-v-6cd742d6] {\n    border-right: 1px solid rgba(128, 128, 128, 0.5);\n    padding-right: 1em;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

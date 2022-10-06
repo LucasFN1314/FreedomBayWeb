@@ -2,7 +2,7 @@
   <div>
     <div>
         <div class="notices">
-            <div id="carouselExampleCaptions" class="carousel slide carousel-notices" data-bs-ride="carousel" v-if="news.length >= 5">
+            <div id="carouselExampleCaptions" class="carousel slide carousel-notices" data-bs-ride="carousel" v-if="news.length >= 3">
                 
 
                 <div class="carousel-indicators" >
@@ -32,7 +32,10 @@
         </div>
     </div>
 
-    <span v-if="openNew && 10 > 1">
+
+
+    <span v-if="openNew">
+        <div class="blackscreen"></div>
         <info-modal @closeModal="openNew = false; actualNew = [];" :info="actualNew" ></info-modal>
     </span>
 
@@ -53,6 +56,7 @@ export default {
     data() {
         return {
             news: [],
+            newsLimit: 10,
             actualNew: [],
             openNew: false,
             newsUrl: 'https://www.lanacion.com.ar'
@@ -73,18 +77,10 @@ export default {
 
                 // || Get all the articles
                 let articles = html.getElementsByClassName('mod-article');
-                
+                axios.post('/api/noticias/limpiar');
 
-                // || Get articles
-                let processedArticles = [];
-                
-                // || First article
-                processedArticles.push(this.processArticle(articles[0]));
-
-                // || The rest of them
-                axios.post('/api/noticias/limpiar', {new: art});
-
-                for(let i = articles.length-4; i<articles.length; i++) {
+                for(let i = 0; i<articles.length; i++) {
+                    if(i >= this.newsLimit) break;
                     this.processArticle(articles[i]);
                 }
 
@@ -95,7 +91,10 @@ export default {
             try {    
                 let href = article.getElementsByTagName('a')[0].href;
                 let finalurl = this.newsUrl;
-                for(let i = 21; i<href.length; i++) {
+
+                // Change for local to 21, 24 for prod
+
+                for(let i = 24; i<href.length; i++) {
                     finalurl+=href[i];
                 }
 
@@ -106,23 +105,40 @@ export default {
                         let respHtml = document.createElement('html');
                         respHtml.innerHTML = response.data;
                         
-                        let tempI = respHtml.getElementsByClassName('placeholder ')[0].getElementsByTagName('img')[0].src;
-                        let finalI = '';
-                        for(let i = 112; i<tempI.length; i++) {
-                            finalI+= tempI[i];
-                        }
                         let art = {
                             title: article.getElementsByClassName('com-title')[0].getElementsByTagName('a')[0].innerHTML,
-                            image: finalI,
+                            image: this.ClearImageLink(respHtml.getElementsByClassName('placeholder ')[0].getElementsByTagName('img')[0].src),
                             link: finalurl,
                         };
                         axios.post('/api/noticias/guardar', {new: art});
+                                              
                         
-                    } catch (errorII) {}
+                    } catch (errorII) {return -1;}
                 });
 
             } 
-            catch (error) {}
+            catch (error) {return -1;}
+        },
+        ClearImageLink(link) {
+            //console.log("image: " + link);
+
+            let result = 'https://';
+            for(let i = 0; i<link.length; i++){
+                if(
+                    link[i] === 'c' &&
+                    link[i+1] === 'l' &&
+                    link[i+2] === 'o' &&
+                    link[i+3] === 'u' &&
+                    link[i+4] === 'd') 
+                    {
+                        for(let j = i; j<link.length; j++) {
+                            result+=link[j];
+                        }
+                        break;
+                    }
+            }
+            //console.log("image result: " + result);
+            return result;
         }   
     },
 }
@@ -147,7 +163,6 @@ export default {
     }
 
     .carousel-inner {
-        background: red;
 
         height: 500px;
         min-height: 500px;
@@ -223,6 +238,14 @@ export default {
         }
     }
 
+    .blackscreen {
+        background: rgba(0, 0, 0, 0.5);
+        width: 100vw;
+        height: 110vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
     .panel_objeto {
         background-color: rgba(255, 255, 255, 0.5);
         width: 90%;

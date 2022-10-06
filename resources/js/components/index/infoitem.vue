@@ -2,7 +2,7 @@
     <div class="carousel-item" data-bs-interval="6000">
         <img :src="this.image" class="d-block w-100" alt="...">
         <div class="carousel-caption d-none d-md-block">
-            <div v-html="this.title"></div>
+            <div v-html="this.title" class="title"></div>
             <p id="subtitle"></p>
         </div>
     </div>
@@ -24,6 +24,8 @@ export default {
 </script>
 
 <style scoped>
+    @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin&display=swap');
+
     a {
         color: white;
         text-decoration: none;
@@ -74,11 +76,17 @@ export default {
     }
 
     .carousel-caption {
-        background: rgba(0, 0, 0, 0.15);
+        background: rgba(0, 0, 0, 0.5);
         bottom: .01rem;
+    }
+
+    .title {
+        font-family: 'Libre Franklin', sans-serif;
+        font-weight: 600;
     }
 
     p {
         margin-bottom: 2em;
     }
+
 </style>

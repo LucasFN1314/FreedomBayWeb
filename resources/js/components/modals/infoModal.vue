@@ -7,11 +7,11 @@
             <div id="modal-container">
                 <span id="start"></span>
                 <div id="modalTitle">
-                    <h1>{{ this.title }}</h1>
+                    <h1 v-html="this.title"></h1>
                 </div>
 
                 <div id="subtitle">
-                    <h4>{{ this.subtitle }}</h4>
+                    <h4>{{this.subtitle}}</h4>
                 </div>
 
                 <div id="principalImage">
@@ -42,8 +42,12 @@
 import axios from "axios";
 export default {
     mounted() {
-        console.log("Abriendo. . .");
+        
+        window.scrollTo(0,0);
+
         this.getInfo();
+        this.deactivateScroll();
+        
     },
     data() {
         return {
@@ -54,18 +58,23 @@ export default {
             image: "",
         };
     },
+    beforeDestroy() {
+        this.activateScroll();
+    },
     methods: {
         getInfo() {
             this.image = this.info.image;
             this.subtitle = this.info.subtitle;
             this.title = this.info.title;
 
-            axios.post("/api/html", { url: this.info.finalHref }).then((response) => {
+
+            axios.post("/api/noticias/buscar", { url: this.info.link }).then((response) => {
                 let html = document.createElement("html");
                 html.innerHTML = response.data;
 
-                this.data = html.getElementsByClassName("paragraph");
-                this.keepReading = html.getElementsByClassName("text-element");
+
+                this.subtitle = html.getElementsByClassName('com-subhead')[0].innerText;
+                this.data = html.getElementsByClassName("com-paragraph");
             });
         },
         getInfoWithUrl(url) {
@@ -89,6 +98,13 @@ export default {
                 document.getElementById('start').scrollIntoView({behavior: 'smooth'}, true);
             });
         },
+        deactivateScroll() {
+            document.getElementById('body').style.overflow = 'hidden';
+        },
+        activateScroll() {
+            document.getElementById('body').style.overflowY = 'scroll';
+        },
+
     },
     props: ["info"],
 };
@@ -166,12 +182,16 @@ export default {
     justify-content: center;
 
     margin-bottom: 2em;
+
 }
 
 #principalImage>img {
     width: 80%;
     height: 100%;
     object-fit: cover;
+
+    border: 1px solid #ccc;
+
 }
 
 #info {
@@ -181,12 +201,17 @@ export default {
     align-content: center;
 }
 
+
+h1 {
+    font-family: "Libre Franklin", sans-serif;
+}
+
 p {
     font-family: "Libre Franklin", sans-serif;
     font-size: 18px;
 
-    margin-left: 8em;
-    margin-right: 8em;
+    margin-left: 7em;
+    margin-right: 7em;
 
     text-align: justify;
 }

@@ -36,16 +36,16 @@ class NewsController extends Controller
     }
 
     public function save(Request $req) {
-        
-
         // || Guardar noticias
             $noticia = new noticia();
             $noticia->title = $req->new['title'];
             $noticia->image = $req->new['image'];
+            $noticia->link = $req->new['link'];
+            $noticia->timestamps = false;
             $noticia->save();
-    }
+        }
 
     public function obtener() {
-        return noticia::inRandomOrder()->limit(5)->get();
+        return noticia::get();
     }
 }

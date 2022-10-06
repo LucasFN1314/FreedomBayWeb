@@ -24,7 +24,10 @@ use App\Models\noticia;
     <!--Imports-->
 
 </head>
-<body>
+<body id="body">
+
+    <div class="blackscreen-"></div>
+
 
     <div id="app">
         <!-- Header -->
@@ -38,6 +41,18 @@ use App\Models\noticia;
 </body>
 
 <style>
+    body {
+        overflow-x: hidden;
+    }
+    .blackscreen-on {
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 110vh;
+        
+    }
 </style>
 
 </html>
