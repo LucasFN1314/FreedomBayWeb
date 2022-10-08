@@ -24,13 +24,7 @@
                     </p>
                 </div>
 
-                <div id="keepReading">
-                    <a href="javascript:void(0)" @click="
-                      getInfoWithUrl(
-                        keepReading[index].getElementsByTagName('a')[0].href
-                      )
-                    " v-for="(item, index) of keepReading" :key="index">{{ keepReading[index].innerText }}</a>
-                </div>
+                
             </div>
 
             <div v-if="this.data == 0 || this.title == 0 || this.subtitle == 0 || this.image == 0"
@@ -87,33 +81,16 @@ export default {
                 this.data = html.getElementsByClassName("com-paragraph");
             });
         },
-        getInfoWithUrl(url) {
-            console.log(url);
-            axios.post("/api/html", { url: url }).then((response) => {
-                let html = document.createElement("html");
-                html.innerHTML = response.data;
-
-                this.data = html.getElementsByClassName("paragraph");
-                this.keepReading = html.getElementsByClassName("text-element");
-
-                this.title =
-                    html.getElementsByClassName("article-headline")[0].innerHTML;
-                this.subtitle = html.getElementsByClassName(
-                    "article-subheadline"
-                )[0].innerText;
-                this.image = html
-                    .getElementsByClassName("visual__image")[0]
-                    .getElementsByTagName("img")[0].src;
-
-                document.getElementById('start').scrollIntoView({ behavior: 'smooth' }, true);
-            });
-        },
         deactivateScroll() {
             document.getElementById('body').style.overflow = 'hidden';
         },
         activateScroll() {
             document.getElementById('body').style.overflowY = 'scroll';
         },
+        autoScroll() {
+            // || To Do
+            // || document.getElementById('modal-container').scroll(0, 100);
+        }
 
     },
     props: ["info"],
@@ -165,6 +142,10 @@ export default {
 
 
     color: rgba(0, 0, 0, 0.521);
+}
+
+#closeModal::before {
+    cursor: pointer;
 }
 
 #modalTitle,

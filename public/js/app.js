@@ -5449,6 +5449,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
@@ -5460,7 +5469,11 @@ __webpack_require__.r(__webpack_exports__);
       newsLimit: 10,
       actualNew: [],
       openNew: false,
-      newsUrl: 'https://www.lanacion.com.ar'
+      newsUrl: 'https://www.lanacion.com.ar',
+      localhostDomain: 21,
+      freedombayDomain: 24,
+      actualDomain: 1,
+      debug: false
     };
   },
   methods: {
@@ -5484,48 +5497,50 @@ __webpack_require__.r(__webpack_exports__);
 
         var articles = html.getElementsByClassName('mod-article');
         axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/noticias/limpiar');
+        var urls = []; // || Get all the urls
 
         for (var i = 0; i < articles.length; i++) {
           if (i >= _this2.newsLimit) break;
+          var href = articles[i].getElementsByTagName('a')[0].href;
+          if (_this2.actualDomain == 0) urls.push(_this2.clearLink(_this2.localhostDomain, href, _this2.newsUrl));else urls.push(_this2.clearLink(_this2.freedombayDomain, href, _this2.newsUrl));
+        } // || Get all pages info
 
-          _this2.processArticle(articles[i]);
-        } // || Send processed to database
 
-      });
-    },
-    processArticle: function processArticle(article) {
-      var _this3 = this;
-
-      try {
-        var href = article.getElementsByTagName('a')[0].href;
-        var finalurl = this.newsUrl; // Change for local to 21, 24 for prod
-
-        for (var i = 24; i < href.length; i++) {
-          finalurl += href[i];
-        }
-
-        axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/noticias/buscar', {
-          url: finalurl
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/noticias/buscarPorLote', {
+          paginas: urls
         }).then(function (response) {
-          try {
-            // Search the image
-            var respHtml = document.createElement('html');
-            respHtml.innerHTML = response.data;
-            var art = {
-              title: article.getElementsByClassName('com-title')[0].getElementsByTagName('a')[0].innerHTML,
-              image: _this3.ClearImageLink(respHtml.getElementsByClassName('placeholder ')[0].getElementsByTagName('img')[0].src),
-              link: finalurl
-            };
-            axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/noticias/guardar', {
-              "new": art
-            });
-          } catch (errorII) {
-            return -1;
-          }
+          // || Info
+          var articles_array = response.data;
+          var articles = []; // || Model structure  
+
+          for (var _i = 0; _i < articles_array.length; _i++) {
+            try {
+              // || Html object
+              var htmlI = document.createElement('html');
+              htmlI.innerHTML = articles_array[_i];
+              var article = {
+                title: htmlI.getElementsByClassName('com-title')[0].innerHTML,
+                image: _this2.ClearImageLink(htmlI.getElementsByClassName('placeholder')[0].getElementsByTagName('img')[0].src),
+                link: urls[_i]
+              };
+              articles.push(article);
+            } catch (error) {
+              if (_this2.debug) console.log("ERROR: " + error);
+            }
+          } // || Save all the articles
+
+
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/noticias/guardarPorLote', {
+            articulos: articles
+          }).then(function (response) {
+            if (response.status == 200) {
+              _this2.getNews();
+
+              alert('Noticias actualizadas!');
+            }
+          });
         });
-      } catch (error) {
-        return -1;
-      }
+      });
     },
     ClearImageLink: function ClearImageLink(link) {
       //console.log("image: " + link);
@@ -5543,6 +5558,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
       return result;
+    },
+    clearLink: function clearLink(domainLength, url, baseUrl) {
+      var clean = baseUrl;
+
+      for (var i = domainLength; i < url.length; i++) {
+        clean += url[i];
+      }
+
+      return clean;
     }
   }
 });
@@ -5642,12 +5666,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
@@ -5683,30 +5701,14 @@ __webpack_require__.r(__webpack_exports__);
         _this.data = html.getElementsByClassName("com-paragraph");
       });
     },
-    getInfoWithUrl: function getInfoWithUrl(url) {
-      var _this2 = this;
-
-      console.log(url);
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/html", {
-        url: url
-      }).then(function (response) {
-        var html = document.createElement("html");
-        html.innerHTML = response.data;
-        _this2.data = html.getElementsByClassName("paragraph");
-        _this2.keepReading = html.getElementsByClassName("text-element");
-        _this2.title = html.getElementsByClassName("article-headline")[0].innerHTML;
-        _this2.subtitle = html.getElementsByClassName("article-subheadline")[0].innerText;
-        _this2.image = html.getElementsByClassName("visual__image")[0].getElementsByTagName("img")[0].src;
-        document.getElementById('start').scrollIntoView({
-          behavior: 'smooth'
-        }, true);
-      });
-    },
     deactivateScroll: function deactivateScroll() {
       document.getElementById('body').style.overflow = 'hidden';
     },
     activateScroll: function activateScroll() {
       document.getElementById('body').style.overflowY = 'scroll';
+    },
+    autoScroll: function autoScroll() {// || To Do
+      // || document.getElementById('modal-container').scroll(0, 100);
     }
   },
   props: ["info"]
@@ -11207,7 +11209,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100&display=swap);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.infoModal[data-v-97d662fe] {\r\n    height: 600px;\r\n    width: 90%;\r\n\r\n    background: white;\r\n    z-index: 100;\r\n\r\n    position: absolute;\r\n\r\n    top: 50%;\r\n    left: 50%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n\r\n    transform: translate(-50%, -50%);\r\n\r\n    border-radius: 10px;\r\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#modal-container[data-v-97d662fe] {\r\n    overflow-y: scroll;\r\n    height: inherit;\n}\n.closeModal[data-v-97d662fe] {\r\n    position: relative;\n}\n#closeModal[data-v-97d662fe] {\r\n    position: absolute;\r\n    font-size: 30px;\r\n\r\n    right: 0;\r\n    top: 0;\r\n    z-index: 100;\r\n\r\n    margin-right: 1em;\r\n    margin-top: .5em;\r\n\r\n\r\n    color: rgba(0, 0, 0, 0.521);\n}\n#modalTitle[data-v-97d662fe],\r\n#subtitle[data-v-97d662fe] {\r\n    text-align: center;\r\n    margin-top: 3em;\r\n    margin-bottom: 1em;\r\n    margin-right: 2em;\r\n    margin-left: 2em;\n}\n#subtitle[data-v-97d662fe] {\r\n    margin-top: 0;\r\n    margin-left: 8em;\r\n    margin-right: 8em;\r\n\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\n#principalImage[data-v-97d662fe] {\r\n    width: 100%;\r\n    height: 600px;\r\n\r\n    display: flex;\r\n    justify-content: center;\r\n\r\n    margin-bottom: 2em;\n}\n#principalImage>img[data-v-97d662fe] {\r\n    width: 80%;\r\n    height: 100%;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n\r\n    border: 1px solid #ccc;\n}\n#info[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-content: center;\n}\nh1[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\np[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n    font-size: 18px;\r\n\r\n    margin-left: 7em;\r\n    margin-right: 7em;\r\n\r\n    text-align: justify;\n}\n#keepReading[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    margin-left: 9em;\r\n    margin-right: 9em;\r\n    margin-bottom: 2em;\n}\n#keepReading>a[data-v-97d662fe] {\r\n    text-decoration: none;\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n\r\n    font-weight: 600;\r\n    margin-bottom: 0.5em;\n}\n.loadingScreen[data-v-97d662fe] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n\r\n    width: 100%;\r\n    height: 100%;\r\n\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    align-items: center;\r\n    justify-content: center;\r\n\r\n    color: white;\r\n    background: rgba(0, 0, 0, 0.9);\n}\n.outloadScreen[data-v-97d662fe] {\r\n    animation: outload-data-v-97d662fe 1s;\r\n\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n\r\n    width: 100%;\r\n    height: 100%;\r\n\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    align-items: center;\r\n    justify-content: center;\r\n    pointer-events: none;\n}\n@keyframes outload-data-v-97d662fe {\n0% {\r\n        \r\n        background: rgba(0, 0, 0, 0.9);\n}\n100% {\n}\n}\n@keyframes outloadicon-data-v-97d662fe {\n0% {\r\n        color: white;\n}\n100% {\r\n        color: transparent;\n}\n}\n.loader[data-v-97d662fe] {\r\n    width: 48px;\r\n    height: 48px;\r\n    border: 5px solid #FFF;\r\n    border-bottom-color: transparent;\r\n    border-radius: 50%;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    animation: rotation-data-v-97d662fe 1s linear infinite;\r\n    pointer-events: none;\n}\n.outloader[data-v-97d662fe] {\r\n    width: 48px;\r\n    height: 48px;\r\n    border-bottom-color: transparent;\r\n    border-radius: 50%;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    animation: outloadicon-data-v-97d662fe 1s linear;\r\n    color: transparent;\r\n    pointer-events: none;\n}\n@keyframes rotation-data-v-97d662fe {\n0% {\r\n        transform: rotate(0deg);\n}\n100% {\r\n        transform: rotate(360deg);\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.infoModal[data-v-97d662fe] {\r\n    height: 600px;\r\n    width: 90%;\r\n\r\n    background: white;\r\n    z-index: 100;\r\n\r\n    position: absolute;\r\n\r\n    top: 50%;\r\n    left: 50%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n\r\n    transform: translate(-50%, -50%);\r\n\r\n    border-radius: 10px;\r\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n}\n#modal-container[data-v-97d662fe] {\r\n    overflow-y: scroll;\r\n    height: inherit;\n}\n.closeModal[data-v-97d662fe] {\r\n    position: relative;\n}\n#closeModal[data-v-97d662fe] {\r\n    position: absolute;\r\n    font-size: 30px;\r\n\r\n    right: 0;\r\n    top: 0;\r\n    z-index: 100;\r\n\r\n    margin-right: 1em;\r\n    margin-top: .5em;\r\n\r\n\r\n    color: rgba(0, 0, 0, 0.521);\n}\n#closeModal[data-v-97d662fe]::before {\r\n    cursor: pointer;\n}\n#modalTitle[data-v-97d662fe],\r\n#subtitle[data-v-97d662fe] {\r\n    text-align: center;\r\n    margin-top: 3em;\r\n    margin-bottom: 1em;\r\n    margin-right: 2em;\r\n    margin-left: 2em;\n}\n#subtitle[data-v-97d662fe] {\r\n    margin-top: 0;\r\n    margin-left: 8em;\r\n    margin-right: 8em;\r\n\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\n#principalImage[data-v-97d662fe] {\r\n    width: 100%;\r\n    height: 600px;\r\n\r\n    display: flex;\r\n    justify-content: center;\r\n\r\n    margin-bottom: 2em;\n}\n#principalImage>img[data-v-97d662fe] {\r\n    width: 80%;\r\n    height: 100%;\r\n    -o-object-fit: cover;\r\n       object-fit: cover;\r\n\r\n    border: 1px solid #ccc;\n}\n#info[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-content: center;\n}\nh1[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\n}\np[data-v-97d662fe] {\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n    font-size: 18px;\r\n\r\n    margin-left: 7em;\r\n    margin-right: 7em;\r\n\r\n    text-align: justify;\n}\n#keepReading[data-v-97d662fe] {\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    margin-left: 9em;\r\n    margin-right: 9em;\r\n    margin-bottom: 2em;\n}\n#keepReading>a[data-v-97d662fe] {\r\n    text-decoration: none;\r\n    font-family: \"Libre Franklin\", sans-serif;\r\n\r\n    font-weight: 600;\r\n    margin-bottom: 0.5em;\n}\n.loadingScreen[data-v-97d662fe] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n\r\n    width: 100%;\r\n    height: 100%;\r\n\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    align-items: center;\r\n    justify-content: center;\r\n\r\n    color: white;\r\n    background: rgba(0, 0, 0, 0.9);\n}\n.outloadScreen[data-v-97d662fe] {\r\n    animation: outload-data-v-97d662fe 1s;\r\n\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n\r\n    width: 100%;\r\n    height: 100%;\r\n\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    align-items: center;\r\n    justify-content: center;\r\n    pointer-events: none;\n}\n@keyframes outload-data-v-97d662fe {\n0% {\r\n        \r\n        background: rgba(0, 0, 0, 0.9);\n}\n100% {\n}\n}\n@keyframes outloadicon-data-v-97d662fe {\n0% {\r\n        color: white;\n}\n100% {\r\n        color: transparent;\n}\n}\n.loader[data-v-97d662fe] {\r\n    width: 48px;\r\n    height: 48px;\r\n    border: 5px solid #FFF;\r\n    border-bottom-color: transparent;\r\n    border-radius: 50%;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    animation: rotation-data-v-97d662fe 1s linear infinite;\r\n    pointer-events: none;\n}\n.outloader[data-v-97d662fe] {\r\n    width: 48px;\r\n    height: 48px;\r\n    border-bottom-color: transparent;\r\n    border-radius: 50%;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    animation: outloadicon-data-v-97d662fe 1s linear;\r\n    color: transparent;\r\n    pointer-events: none;\n}\n@keyframes rotation-data-v-97d662fe {\n0% {\r\n        transform: rotate(0deg);\n}\n100% {\r\n        transform: rotate(360deg);\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30065,29 +30067,6 @@ var render = function () {
                   "\n                "
               ),
             ])
-          }),
-          0
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { attrs: { id: "keepReading" } },
-          _vm._l(_vm.keepReading, function (item, index) {
-            return _c(
-              "a",
-              {
-                key: index,
-                attrs: { href: "javascript:void(0)" },
-                on: {
-                  click: function ($event) {
-                    _vm.getInfoWithUrl(
-                      _vm.keepReading[index].getElementsByTagName("a")[0].href
-                    )
-                  },
-                },
-              },
-              [_vm._v(_vm._s(_vm.keepReading[index].innerText))]
-            )
           }),
           0
         ),

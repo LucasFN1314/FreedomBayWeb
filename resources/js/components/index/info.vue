@@ -1,49 +1,58 @@
 <template>
-  <div>
     <div>
-        <div class="notices">
-            <div id="carouselExampleCaptions" class="carousel slide carousel-notices" data-bs-ride="carousel" v-if="news.length >= 3">
-                
+        <div>
+            <div class="notices">
+                <div id="carouselExampleCaptions" class="carousel slide carousel-notices" data-bs-ride="carousel"
+                    v-if="news.length >= 3">
 
-                <div class="carousel-indicators" >
-                    <button type="button" v-for="(item, index) of news" :key="index" data-bs-target="#carouselExampleCaptions" :data-bs-slide-to="index" class="active" aria-current="true" aria-label="Slide 1"></button>    
+
+                    <div class="carousel-indicators">
+                        <button type="button" v-for="(item, index) of news" :key="index"
+                            data-bs-target="#carouselExampleCaptions" :data-bs-slide-to="index" class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                    </div>
+
+                    <div class="carousel-inner">
+                        <span v-for="(item, index) of news.length" :key="index">
+                            <info-item v-if="index == 0" @click.native="openNew = true; actualNew = news[index];"
+                                class="active" :title="news[index].title" :subtitle="news[index].subtitle"
+                                :image="news[index].image" :link="news[index].finalHref"></info-item>
+                            <info-item v-else @click.native="openNew = true; actualNew = news[index];"
+                                :title="news[index].title" :subtitle="news[index].subtitle" :image="news[index].image"
+                                :link="news[index].finalHref"></info-item>
+                        </span>
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide="next" id="carouselNext">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
 
-                <div class="carousel-inner">
-                <span v-for="(item, index) of news.length" :key="index">
-                    <info-item v-if="index == 0" @click.native="openNew = true; actualNew = news[index];" class="active" :title="news[index].title" :subtitle="news[index].subtitle" :image="news[index].image" :link="news[index].finalHref"></info-item>
-                    <info-item v-else @click.native="openNew = true; actualNew = news[index];" :title="news[index].title" :subtitle="news[index].subtitle" :image="news[index].image" :link="news[index].finalHref"></info-item>
-                </span>
+                <div v-else id="cargandoNoticiasCuad">
+                    <h1 id="cargandoNoticias">Cargando noticias</h1>
                 </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next" id="carouselNext">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-
-            <div v-else id="cargandoNoticiasCuad">
-                <h1 id="cargandoNoticias">Cargando noticias</h1>
             </div>
         </div>
+
+
+
+        <span v-if="openNew">
+            <div class="blackscreen"></div>
+            <info-modal @closeModal="openNew = false; actualNew = [];" :info="actualNew"></info-modal>
+        </span>
+
+        <div class="panel_objeto">
+            <a href="javascript:void(0)" @click="updateNews()" class="panel_boton">Actualizar noticias</a>
+        </div>
+
     </div>
-
-
-
-    <span v-if="openNew">
-        <div class="blackscreen"></div>
-        <info-modal @closeModal="openNew = false; actualNew = [];" :info="actualNew" ></info-modal>
-    </span>
-
-    <div class="panel_objeto">
-        <a href="javascript:void(0)" @click="updateNews()" class="panel_boton">Actualizar noticias</a>
-    </div>
-    
-  </div>
 </template>
 
 <script>
@@ -59,7 +68,11 @@ export default {
             newsLimit: 10,
             actualNew: [],
             openNew: false,
-            newsUrl: 'https://www.lanacion.com.ar'
+            newsUrl: 'https://www.lanacion.com.ar',
+            localhostDomain: 21,
+            freedombayDomain: 24,
+            actualDomain: 1,
+            debug: false,
         }
     },
     methods: {
@@ -79,45 +92,51 @@ export default {
                 let articles = html.getElementsByClassName('mod-article');
                 axios.post('/api/noticias/limpiar');
 
+                let urls = [];
+
+                // || Get all the urls
                 for(let i = 0; i<articles.length; i++) {
                     if(i >= this.newsLimit) break;
-                    this.processArticle(articles[i]);
+                    let href = articles[i].getElementsByTagName('a')[0].href;
+                    if(this.actualDomain == 0)
+                    urls.push(this.clearLink(this.localhostDomain, href, this.newsUrl));
+                    else 
+                    urls.push(this.clearLink(this.freedombayDomain, href, this.newsUrl));
                 }
+                
+                // || Get all pages info
+                axios.post('/api/noticias/buscarPorLote', {paginas: urls}).then((response) => {
+                    // || Info
+                    let articles_array = response.data;
+                
+                    let articles = [];
 
-                // || Send processed to database
-            });
-        },
-        processArticle(article) {
-            try {    
-                let href = article.getElementsByTagName('a')[0].href;
-                let finalurl = this.newsUrl;
-
-                // Change for local to 21, 24 for prod
-
-                for(let i = 24; i<href.length; i++) {
-                    finalurl+=href[i];
-                }
-
-
-                axios.post('/api/noticias/buscar', {url:finalurl}).then((response) => {
-                    try {
-                        // Search the image
-                        let respHtml = document.createElement('html');
-                        respHtml.innerHTML = response.data;
-                        
-                        let art = {
-                            title: article.getElementsByClassName('com-title')[0].getElementsByTagName('a')[0].innerHTML,
-                            image: this.ClearImageLink(respHtml.getElementsByClassName('placeholder ')[0].getElementsByTagName('img')[0].src),
-                            link: finalurl,
+                    // || Model structure  
+                    for(let i = 0; i<articles_array.length; i++) {
+                        try {
+                            // || Html object
+                        let htmlI = document.createElement('html');
+                        htmlI.innerHTML = articles_array[i];
+                    
+                        let article = {
+                            title: htmlI.getElementsByClassName('com-title')[0].innerHTML,
+                            image: this.ClearImageLink(htmlI.getElementsByClassName('placeholder')[0].getElementsByTagName('img')[0].src),
+                            link: urls[i],
                         };
-                        axios.post('/api/noticias/guardar', {new: art});
-                                              
-                        
-                    } catch (errorII) {return -1;}
+                        articles.push(article);
+                        } catch (error) {if(this.debug) console.log("ERROR: " + error)}
+                    }
+
+                    // || Save all the articles
+                    axios.post('/api/noticias/guardarPorLote', {articulos: articles}).then((response) => {
+                        if(response.status == 200) {
+                            this.getNews();
+                            alert('Noticias actualizadas!');
+                        }
+                    });
                 });
 
-            } 
-            catch (error) {return -1;}
+            });
         },
         ClearImageLink(link) {
             //console.log("image: " + link);
@@ -139,7 +158,14 @@ export default {
             }
             //console.log("image result: " + result);
             return result;
-        }   
+        },
+        clearLink(domainLength, url, baseUrl) {
+            let clean = baseUrl;
+            for(let i = domainLength; i<url.length; i++) {
+                clean+=url[i];
+            }
+            return clean;
+        },
     },
 }
 </script>

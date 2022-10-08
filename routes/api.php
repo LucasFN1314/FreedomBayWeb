@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::post('noticias/buscar', [NewsController::class, 'search']);
+Route::post('noticias/buscarPorLote', [NewsController::class, 'buscarPorLote']);
 Route::post('noticias/guardar', [NewsController::class, 'save']);
+Route::post('noticias/guardarPorLote', [NewsController::class, 'guardarPorLote']);
 Route::post('noticias/limpiar', [NewsController::class, 'limpiar']);
 Route::post('noticias/obtener', [NewsController::class, 'obtener']);

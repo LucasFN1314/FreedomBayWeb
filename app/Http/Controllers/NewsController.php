@@ -21,20 +21,32 @@ class NewsController extends Controller
         if($status == 200) {
             return $html;
         }
+        else {
+            print curl_error($c);
+        }
 
         curl_close($c);
     } 
-    
-
     public function search(Request $req) {
         // || Devolver html
-        return $this->get($req->url);
+        if($req) {
+            return $this->get($req->url);
+        }
+        return null;
     }
-    
+    public function buscarPorLote(Request $req) {
+        // || Devolver los html por lote
+        $lecturas = [];
+        $paginas = $req->paginas;
+        foreach($paginas as $pagina) {
+            $result = $this->get($pagina);
+            array_push($lecturas, $result);
+        }
+        return $lecturas;
+    }
     public function limpiar() {
         noticia::truncate();
     }
-
     public function save(Request $req) {
         // || Guardar noticias
             $noticia = new noticia();
@@ -43,8 +55,19 @@ class NewsController extends Controller
             $noticia->link = $req->new['link'];
             $noticia->timestamps = false;
             $noticia->save();
-        }
-
+    }
+    public function guardarPorLote(Request $req) {
+        // || Guardar noticias
+            $articulos = $req->articulos;
+            foreach($articulos as $articulo) {
+                $noticia = new noticia();
+                $noticia->title = $articulo['title'];
+                $noticia->image = $articulo['image'];
+                $noticia->link = $articulo['link'];
+                $noticia->timestamps = false;
+                $noticia->save();
+            }
+    }
     public function obtener() {
         return noticia::get();
     }
